@@ -1,6 +1,10 @@
 part of 'theme_bloc.dart';
 
 @immutable
-abstract class ThemeState {}
+class ThemeState {
+  final Color materialColor;
+  final Color textColor;
 
-class ThemeInitial extends ThemeState {}
+
+  ThemeState({this.materialColor,this.textColor});
+}
