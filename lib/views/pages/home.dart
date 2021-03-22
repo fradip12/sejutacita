@@ -56,7 +56,7 @@ class _HomeState extends State<Home> {
                         expandedHeight: width * .25,
                         floating: false,
                         pinned: false,
-                        backgroundColor: state.textColor,
+                        backgroundColor: Colors.white,
                         flexibleSpace: FlexibleSpaceBar(
                           centerTitle: true,
                           collapseMode: CollapseMode.none,

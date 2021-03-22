@@ -15,11 +15,11 @@ class ChooserButton extends StatelessWidget {
     return BlocBuilder<ThemeBloc, ThemeState>(
       builder: (context, state) => ElevatedButton(
         style: ElevatedButton.styleFrom(
-          primary: isSelected ? state.materialColor : state.textColor,
+          primary: isSelected ? Colors.black : Colors.white,
           shape: StadiumBorder(),
         ),
         onPressed: func,
-        child: chooserText(title: title,color: isSelected ? state.textColor : state.materialColor),
+        child: chooserText(title: title,color: isSelected ? Colors.white : Colors.black),
       ),
     );
   }
