@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:citav2/bloc/bloc.dart';
 import 'package:citav2/core/responsive.dart';
 import 'package:citav2/core/shared/app.dart';
+import 'package:citav2/widgets/button/default_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/route_manager.dart';
@@ -26,7 +27,6 @@ class _SplashState extends State<Splash> {
       } else
         Get.offNamed('/welcome');
     });
-
   }
 
   @override
@@ -39,10 +39,8 @@ class _SplashState extends State<Splash> {
       builder: (context, state) => Scaffold(
         backgroundColor: state.materialColor,
         body: Center(
-          child: Icon(
-            LineIcons.github,
-            size: width * .5,
-            color: state.textColor,
+          child: GitIcon(
+            size: (width * 0.5).toInt(),
           ),
         ),
       ),

@@ -1,3 +1,4 @@
+import 'package:citav2/bloc/chooser/chooser_bloc.dart';
 import 'package:citav2/core/shared/app.dart';
 import 'package:citav2/views/lobby/lobby_root.dart';
 import 'package:citav2/views/onboard/splash.dart';
@@ -24,6 +25,9 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider<ThemeBloc>(
           create: (BuildContext context) => ThemeBloc(),
+        ),
+        BlocProvider<ChooserBloc>(
+          create: (BuildContext context) => ChooserBloc(),
         )
       ],
       child: GetMaterialApp(
