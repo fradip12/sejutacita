@@ -8,10 +8,13 @@ const BASE_URL = 'https://api.github.com/search/';
 class Git {
   static Future<UserResults> fetchUser(
       String keywords, int page, int limit) async {
-    final response = await http
-        .get(Uri.parse(BASE_URL + 'users?q=$keywords'));
+    final response = await http.get(
+        Uri.parse(BASE_URL + 'users?q=$keywords&page=$page&per_page=$limit'));
 
     if (response.statusCode == 200) {
+      UserResults value = UserResults.fromJson(json.decode(response.body));
+      return value;
+    } else if (response.statusCode == 403) {
       UserResults value = UserResults.fromJson(json.decode(response.body));
       return value;
     } else {

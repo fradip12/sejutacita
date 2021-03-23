@@ -8,7 +8,7 @@ class TextFormFieldBorder extends StatelessWidget {
   final Widget suffix;
   final int maxLines;
   final String hintText;
-  final void Function(String) onChanged;
+  final void Function(String) onSubmitted;
   final String Function(String) validatorFunction;
   final TextEditingController globControl;
   final GlobalKey<FormFieldState> globKey;
@@ -19,7 +19,7 @@ class TextFormFieldBorder extends StatelessWidget {
   const TextFormFieldBorder({
     this.key,
     @required this.isSecure,
-    @required this.onChanged,
+    this.onSubmitted,
     this.validatorFunction,
     this.prefixIcon,
     this.keyboardType,
@@ -73,7 +73,7 @@ class TextFormFieldBorder extends StatelessWidget {
             prefixIcon: prefixIcon,
             suffixIcon: suffix ?? null,
           ),
-          onChanged: onChanged ?? (String val) {},
+          onFieldSubmitted: onSubmitted ?? (String val) {},
           validator: validatorFunction ??
               (val) {
                 if (val.isEmpty) {

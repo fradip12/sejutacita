@@ -5,6 +5,7 @@ import 'package:citav2/core/shared/app.dart';
 import 'package:citav2/widgets/button/default_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/route_manager.dart';
 
 class Welcome extends StatefulWidget {
   @override
@@ -46,7 +47,7 @@ class _WelcomeState extends State<Welcome> {
                 title: 'Start',
                 func: () {
                   color = !color;
-                  color ? theme.add(ToWhite()) : theme.add(ToBlack());
+                  Get.toNamed('/lobby');
                 },
               )
             ],

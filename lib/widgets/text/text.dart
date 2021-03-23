@@ -10,12 +10,30 @@ Widget material({@required String title}) {
     ),
   );
 }
+
 Widget text({@required String title}) {
   return BlocBuilder<ThemeBloc, ThemeState>(
     builder: (context, state) => Text(
       title,
       style: TextStyle(fontSize: 16, color: state.textColor),
     ),
+  );
+}
+
+Widget text10({@required String title}) {
+  return BlocBuilder<ThemeBloc, ThemeState>(
+    builder: (context, state) => Text(
+      title,
+      style: TextStyle(fontSize: 12, color: Colors.black),
+    ),
+  );
+}
+
+Widget text16Bold({@required String title}) {
+  return Text(
+    title,
+    style: TextStyle(
+        fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
   );
 }
 
