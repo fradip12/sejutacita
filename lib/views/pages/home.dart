@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:citav2/bloc/bloc.dart';
 import 'package:citav2/bloc/chooser/chooser_bloc.dart';
 import 'package:citav2/bloc/data/data_bloc.dart';
+import 'package:citav2/bloc/radio/radio_bloc.dart';
 import 'package:citav2/core/responsive.dart';
 import 'package:citav2/core/services/api.dart';
 import 'package:citav2/core/services/extension.dart';
@@ -32,6 +33,7 @@ class _HomeState extends State<Home> {
   bool test = false;
   ScrollController contr = new ScrollController();
   DataBloc dataBloc;
+  RadioBloc radioBloc;
   // void onScroll() {
   //   double maxScroll = contr.position.maxScrollExtent;
   //   double currentScroll = contr.position.pixels;
@@ -44,6 +46,7 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     dataBloc = BlocProvider.of<DataBloc>(context);
+    radioBloc = BlocProvider.of<RadioBloc>(context);
 
     contr.addListener(() {
       maxScroll = contr.position.maxScrollExtent - 10;
@@ -51,7 +54,7 @@ class _HomeState extends State<Home> {
       if (currentScroll > maxScroll) {
         print('current Scroll : ' + currentScroll.toString());
         print('maxScroll' + maxScroll.toString());
-        dataBloc.add(MoreData(keywords:search.text));
+        dataBloc.add(MoreData(keywords: search.text));
       }
     });
   }
@@ -106,7 +109,9 @@ class _HomeState extends State<Home> {
                             suffix: Icon(LineIcons.search),
                             onSubmitted: (String value) {
                               print('Look for : ' + value);
-                              dataBloc.add(FetchData(keywords: value));
+                              value != ''
+                                  ? dataBloc.add(FetchData(keywords: value))
+                                  : dataBloc.add(ClearData());
                             },
                             globControl: search,
                             globKey: searchGlob,
@@ -119,18 +124,20 @@ class _HomeState extends State<Home> {
                   body: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      FlutterRadioGroup(
-                          titles: _listHorizontal,
-                          labelVisible: true,
-                          activeColor: Colors.black,
-                          titleStyle: TextStyle(fontSize: 14),
-                          defaultSelected: _indexHorizontal,
-                          orientation: RGOrientation.HORIZONTAL,
-                          onChanged: (index) {
-                            setState(() {
-                              _indexHorizontal = index;
-                            });
-                          }),
+                      BlocBuilder<RadioBloc, RadioState>(
+                        builder: (context, state) => FlutterRadioGroup(
+                            titles: _listHorizontal,
+                            labelVisible: true,
+                            activeColor: Colors.black,
+                            titleStyle: TextStyle(fontSize: 14),
+                            defaultSelected: state.index,
+                            orientation: RGOrientation.HORIZONTAL,
+                            onChanged: (index) {
+                              if (index == 0) return radioBloc.add(RepoEvent());
+                              if (index == 1) return radioBloc.add(IssueEvent());
+                              if (index == 2) return radioBloc.add(UserEvent());
+                            }),
+                      ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -182,75 +189,74 @@ class _HomeState extends State<Home> {
     return BlocBuilder<DataBloc, DataState>(builder: (context, state) {
       if (state is DataUnintialized) {
         return Center(child: Container(child: Text('LookGit')));
-      } else {
-        DataLoaded userLoaded = state as DataLoaded;
+      }
+      if (state is DataClear) {
+        return Text('Cari sesuatu');
+      }
+      if (state is DataError) {
+        return Text(state.message);
+      } else if (state is DataLoaded) {
         return WaterfallFlow.builder(
-            itemCount: userLoaded.hasReachedMax
-                ? userLoaded.user.items.length
-                : userLoaded.user.items.length + 1,
+            itemCount: state.hasReachedMax
+                ? state.user.items.length
+                : state.user.items.length + 1,
             gridDelegate: SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 1, crossAxisSpacing: 12, mainAxisSpacing: 12),
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             itemBuilder: (ctx, idx) {
-              if (state is DataLoaded) {
-                if (idx < userLoaded.user.items.length) {
-                  return Card(
-                    elevation: 7,
-                    child: Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30)),
-                      margin: EdgeInsets.symmetric(vertical: 25),
-                      padding: EdgeInsets.symmetric(horizontal: 25),
-                      child: Row(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(4),
-                            child: CachedNetworkImage(
-                                height: 25,
-                                width: 25,
-                                fit: BoxFit.fill,
-                                imageUrl: userLoaded.user.items[idx].avatar),
+              if (idx < state.user.items.length) {
+                return Card(
+                  elevation: 7,
+                  child: Container(
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(30)),
+                    margin: EdgeInsets.symmetric(vertical: 25),
+                    padding: EdgeInsets.symmetric(horizontal: 25),
+                    child: Row(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: CachedNetworkImage(
+                              height: 25,
+                              width: 25,
+                              fit: BoxFit.fill,
+                              imageUrl: state.user.items[idx].avatar),
+                        ),
+                        SizedBox(width: 15),
+                        Expanded(
+                          flex: 3,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              text16Bold(
+                                  title: inCaps(state.user.items[idx].login)),
+                              text10(title: state.user.items[idx].type),
+                            ],
                           ),
-                          SizedBox(width: 15),
-                          Expanded(
-                            flex: 3,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                text16Bold(
-                                    title: inCaps(
-                                        userLoaded.user.items[idx].login)),
-                                text10(title: userLoaded.user.items[idx].type),
-                              ],
-                            ),
-                          ),
-                          Card(
-                              elevation: 7,
-                              child: Container(
-                                  padding: EdgeInsets.all(8),
-                                  child: text10(title: 'Follow'))),
-                        ],
-                      ),
+                        ),
+                        Card(
+                            elevation: 7,
+                            child: Container(
+                                padding: EdgeInsets.all(8),
+                                child: text10(title: 'Follow'))),
+                      ],
                     ),
-                  );
-                }
-                if (userLoaded.user.total == userLoaded.user.items.length) {
-                  return Container();
-                } else {
-                  return Center(
-                    child: Container(child: CircularProgressIndicator()),
-                  );
-                }
+                  ),
+                );
               }
-              if (state is DataError) {
-                return Text(state.message);
+              if (state.user.total == state.user.items.length) {
+                return Container();
+              } else {
+                return Center(
+                  child: Container(child: CircularProgressIndicator()),
+                );
               }
-              return Center(
-                child: Container(child: CircularProgressIndicator()),
-              );
             });
       }
+      return Center(
+        child: Container(child: CircularProgressIndicator()),
+      );
     });
   }
 }

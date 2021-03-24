@@ -11,3 +11,7 @@ class MoreData extends DataEvent{
   final String keywords;
   MoreData({this.keywords});
 }
+
+class ClearData extends DataEvent{
+  
+}

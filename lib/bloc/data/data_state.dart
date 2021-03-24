@@ -16,8 +16,11 @@ class DataLoaded extends DataState {
     );
   }
 }
-
 class DataError extends DataState {
   final String message;
   DataError({this.message});
+}
+class DataClear extends DataState {
+  final String message;
+  DataClear({this.message});
 }
