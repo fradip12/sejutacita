@@ -1,6 +1,5 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:citav2/bloc/bloc.dart';
-import 'package:citav2/core/responsive.dart';
 import 'package:citav2/core/shared/app.dart';
 import 'package:citav2/widgets/button/default_button.dart';
 import 'package:flutter/material.dart';
@@ -18,14 +17,12 @@ class _WelcomeState extends State<Welcome> {
   bool color = false;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     App.data.setBool('isWelcome', false);
   }
 
   @override
   Widget build(BuildContext context) {
-    ThemeBloc theme = BlocProvider.of<ThemeBloc>(context);
     return BlocBuilder<ThemeBloc, ThemeState>(
       builder: (context, state) => Container(
           child: Scaffold(

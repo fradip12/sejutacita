@@ -1,4 +1,5 @@
 import 'package:citav2/bloc/chooser/chooser_bloc.dart';
+import 'package:citav2/bloc/data/issue_data/issue_data_bloc.dart';
 import 'package:citav2/bloc/data/repo_data/repo_data_bloc.dart';
 import 'package:citav2/bloc/data/user_data/data_bloc.dart';
 import 'package:citav2/bloc/radio/radio_bloc.dart';
@@ -39,6 +40,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<RepoDataBloc>(
           create: (BuildContext context) => RepoDataBloc(),
+        ),
+         BlocProvider<IssueDataBloc>(
+          create: (BuildContext context) => IssueDataBloc(),
         )
       ],
       child: GetMaterialApp(

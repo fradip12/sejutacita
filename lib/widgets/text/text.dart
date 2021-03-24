@@ -29,6 +29,17 @@ Widget text10({@required String title}) {
   );
 }
 
+Widget text10Overflow({@required String title}) {
+  return BlocBuilder<ThemeBloc, ThemeState>(
+    builder: (context, state) => Text(
+      title,
+      overflow: TextOverflow.ellipsis,
+      maxLines: 3,
+      style: TextStyle(fontSize: 12, color: Colors.black),
+    ),
+  );
+}
+
 Widget text16Bold({@required String title}) {
   return Text(
     title,

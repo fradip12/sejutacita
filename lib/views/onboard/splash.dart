@@ -7,7 +7,6 @@ import 'package:citav2/widgets/button/default_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/route_manager.dart';
-import 'package:line_icons/line_icons.dart';
 
 class Splash extends StatefulWidget {
   @override

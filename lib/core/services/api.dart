@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:citav2/core/models/issue/issue_model.dart';
 import 'package:citav2/core/models/repo/repo_model.dart';
 import 'package:citav2/core/models/user/user.model.dart';
 import 'package:http/http.dart' as http;
@@ -34,6 +35,23 @@ class Git {
     }
     if (response.statusCode == 403) {
       RepoResults value = RepoResults.fromJson(json.decode(response.body));
+      return value;
+    } else {
+      return throw Exception('Unable to get data');
+    }
+  }
+
+  static Future<IssueResults> fetchIssue(
+      String keywords, int page, int limit) async {
+    final response = await http.get(
+        Uri.parse(BASE_URL + 'issues?q=$keywords&page=$page&per_page=$limit'));
+
+    if (response.statusCode == 200) {
+      IssueResults value = IssueResults.fromJson(json.decode(response.body));
+      return value;
+    }
+    if (response.statusCode == 403) {
+      IssueResults value = IssueResults.fromJson(json.decode(response.body));
       return value;
     } else {
       return throw Exception('Unable to get data');

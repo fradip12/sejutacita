@@ -1,13 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:citav2/bloc/bloc.dart';
 import 'package:citav2/bloc/chooser/chooser_bloc.dart';
+import 'package:citav2/bloc/data/issue_data/issue_data_bloc.dart';
 import 'package:citav2/bloc/data/repo_data/repo_data_bloc.dart';
 import 'package:citav2/bloc/data/user_data/data_bloc.dart';
 import 'package:citav2/bloc/radio/radio_bloc.dart';
 import 'package:citav2/core/responsive.dart';
 import 'package:citav2/core/services/extension.dart';
 import 'package:citav2/widgets/button/chooser_button.dart';
-import 'package:citav2/widgets/button/default_button.dart';
 import 'package:citav2/widgets/button/default_icon.dart';
 import 'package:citav2/widgets/circle_random.dart';
 import 'package:citav2/widgets/eye_icon.dart';
@@ -33,6 +33,7 @@ class _HomeState extends State<Home> {
   ScrollController contr = new ScrollController();
   DataBloc dataBloc;
   RepoDataBloc repoBloc;
+  IssueDataBloc issueBloc;
   RadioBloc radioBloc;
   // void onScroll() {
   //   double maxScroll = contr.position.maxScrollExtent;
@@ -48,6 +49,7 @@ class _HomeState extends State<Home> {
     dataBloc = BlocProvider.of<DataBloc>(context);
     repoBloc = BlocProvider.of<RepoDataBloc>(context);
     radioBloc = BlocProvider.of<RadioBloc>(context);
+    issueBloc = BlocProvider.of<IssueDataBloc>(context);
 
     contr.addListener(() {
       maxScroll = contr.position.maxScrollExtent - 10;
@@ -55,8 +57,10 @@ class _HomeState extends State<Home> {
       if (currentScroll > maxScroll) {
         print('current Scroll : ' + currentScroll.toString());
         print('maxScroll' + maxScroll.toString());
-        dataBloc.add(MoreData(keywords: search.text));
-        repoBloc.add(MoreRepo(keywords: search.text));
+        if (radioBloc.state.index == 0)
+          repoBloc.add(MoreRepo(keywords: search.text));
+        else
+          dataBloc.add(MoreData(keywords: search.text));
       }
     });
   }
@@ -111,8 +115,12 @@ class _HomeState extends State<Home> {
                         suffix: Icon(LineIcons.search),
                         onSubmitted: (String value) {
                           print('Look for : ' + value);
-                          repoBloc.add(FetchRepo(keywords: value));
-                          dataBloc.add(FetchData(keywords: value));
+                          searchState.index == 0
+                              ? repoBloc.add(FetchRepo(keywords: value))
+                              : searchState.index == 1
+                                  ? issueBloc
+                                      .add(FetchDataIssue(keywords: value))
+                                  : dataBloc.add(FetchData(keywords: value));
                         },
                         globControl: search,
                         globKey: searchGlob,
@@ -251,7 +259,8 @@ class _HomeState extends State<Home> {
                                     height: 8,
                                   ),
                                   text10(
-                                      title: state.repo.item[idx].description ?? ''),
+                                      title: state.repo.item[idx].description ??
+                                          ''),
                                   SizedBox(
                                     height: 8,
                                   ),
@@ -275,7 +284,8 @@ class _HomeState extends State<Home> {
                                     ),
                                     text10(
                                         title: kPoint(
-                                            state.repo.item[idx].seenCount ?? 0)),
+                                            state.repo.item[idx].seenCount ??
+                                                0)),
                                   ],
                                 ))
                           ],
@@ -296,6 +306,81 @@ class _HomeState extends State<Home> {
             child: Container(child: Text('Data Kosong')),
           );
         });
+        break;
+      case 1:
+        return BlocBuilder<IssueDataBloc, IssueDataState>(
+            builder: (context, state) {
+          if (state is IssueDataUnintialized) {
+            return Center(child: Container(child: Text('LookGit')));
+          }
+          if (state is IssueDataClear) {
+            return Text('Cari sesuatu');
+          }
+          if (state is IssueDataError) {
+            return Text(state.message);
+          } else if (state is IssueLoaded) {
+            return WaterfallFlow.builder(
+                itemCount: state.hasReachedMax
+                    ? state.issue.items.length
+                    : state.issue.items.length + 1,
+                gridDelegate:
+                    SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 1,
+                        crossAxisSpacing: 12,
+                        mainAxisSpacing: 12),
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemBuilder: (ctx, idx) {
+                  if (idx < state.issue.items.length) {
+                    return Card(
+                      elevation: 7,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30)),
+                        margin: EdgeInsets.symmetric(vertical: 25),
+                        padding: EdgeInsets.symmetric(horizontal: 25),
+                        child: Row(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(4),
+                              child: CachedNetworkImage(
+                                  height: 25,
+                                  width: 25,
+                                  fit: BoxFit.fill,
+                                  imageUrl: state.issue.items[idx].user.avatar),
+                            ),
+                            SizedBox(width: 15),
+                            Expanded(
+                              flex: 3,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  text16Bold(
+                                      title:
+                                          inCaps(state.issue.items[idx].title)),
+                                  text10Overflow(title: state.issue.items[idx].body),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+                  if (state.issue.total == state.issue.items.length) {
+                    return Container();
+                  } else {
+                    return Center(
+                      child: Container(child: CircularProgressIndicator()),
+                    );
+                  }
+                });
+          }
+          return Center(
+            child: Container(child: CircularProgressIndicator()),
+          );
+        });
+
         break;
       case 2:
         return BlocBuilder<DataBloc, DataState>(builder: (context, state) {
