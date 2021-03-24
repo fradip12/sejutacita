@@ -1,4 +1,4 @@
-package com.example.citav2
+package com.example.LookGit
 
 import io.flutter.embedding.android.FlutterActivity
 
