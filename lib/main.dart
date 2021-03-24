@@ -1,5 +1,6 @@
 import 'package:citav2/bloc/chooser/chooser_bloc.dart';
-import 'package:citav2/bloc/data/data_bloc.dart';
+import 'package:citav2/bloc/data/repo_data/repo_data_bloc.dart';
+import 'package:citav2/bloc/data/user_data/data_bloc.dart';
 import 'package:citav2/bloc/radio/radio_bloc.dart';
 import 'package:citav2/core/shared/app.dart';
 import 'package:citav2/views/lobby/lobby_root.dart';
@@ -16,7 +17,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await App.init();
-  runApp(MyApp());
   runApp(MyApp());
 }
 
@@ -36,6 +36,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<RadioBloc>(
           create: (BuildContext context) => RadioBloc(),
+        ),
+        BlocProvider<RepoDataBloc>(
+          create: (BuildContext context) => RepoDataBloc(),
         )
       ],
       child: GetMaterialApp(

@@ -1,4 +1,0 @@
-class RepoResults {
-  String totalCount;
-   
-}

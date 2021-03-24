@@ -32,12 +32,6 @@ class DataBloc extends Bloc<DataEvent, DataState> {
         user.items.addAll(moreUser.items);
         yield DataLoaded(user: user, hasReachedMax: false);
       }
-
-      // DataLoaded userLoaded = state as DataLoaded;
-      // user = await Git.fetchUser('flutter', page + 1, 10);
-      // yield (user.items.isEmpty)
-      //     ? userLoaded.copyWith(hasReachedMax: true)
-      //     : DataLoaded(user: userLoaded.user, hasReachedMax: false);
     }
     if (event is ClearData) {
       user.items.clear();
