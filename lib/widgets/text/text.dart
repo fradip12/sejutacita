@@ -47,7 +47,13 @@ Widget text16Bold({@required String title}) {
         fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
   );
 }
-
+Widget text16WBold({@required String title}) {
+  return Text(
+    title,
+    style: TextStyle(
+        fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+  );
+}
 Widget chooserText({@required String title, Color color}) {
   return Text(
     title,

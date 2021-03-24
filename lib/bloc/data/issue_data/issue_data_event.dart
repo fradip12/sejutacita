@@ -1,13 +1,11 @@
 part of 'issue_data_bloc.dart';
 
-abstract class IssueDataEvent {
- 
-}
-
+abstract class IssueDataEvent {}
 
 class FetchDataIssue extends IssueDataEvent {
   final String keywords;
-  FetchDataIssue({this.keywords});
+  final int page;
+  FetchDataIssue({this.keywords, this.page});
 }
 
 class MoreDataIssue extends IssueDataEvent {

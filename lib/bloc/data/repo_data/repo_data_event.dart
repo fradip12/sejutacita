@@ -5,7 +5,8 @@ abstract class RepoDataEvent {}
 
 class FetchRepo extends RepoDataEvent {
   final String keywords;
-  FetchRepo({this.keywords});
+  final int page;
+  FetchRepo({this.keywords, this.page});
 }
 
 class MoreRepo extends RepoDataEvent {

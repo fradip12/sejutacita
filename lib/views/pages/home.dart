@@ -10,13 +10,16 @@ import 'package:citav2/core/services/extension.dart';
 import 'package:citav2/widgets/button/chooser_button.dart';
 import 'package:citav2/widgets/button/default_icon.dart';
 import 'package:citav2/widgets/circle_random.dart';
+import 'package:citav2/widgets/custom_icon.dart';
 import 'package:citav2/widgets/eye_icon.dart';
 import 'package:citav2/widgets/text/text.dart';
 import 'package:citav2/widgets/text/text_field.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_radio_group/flutter_radio_group.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:waterfall_flow/waterfall_flow.dart';
 
 class Home extends StatefulWidget {
@@ -35,14 +38,10 @@ class _HomeState extends State<Home> {
   RepoDataBloc repoBloc;
   IssueDataBloc issueBloc;
   RadioBloc radioBloc;
-  // void onScroll() {
-  //   double maxScroll = contr.position.maxScrollExtent;
-  //   double currentScroll = contr.position.pixels;
-
-  //   if (currentScroll == maxScroll) return data.add(DataEvent());
-  // }
   double maxScroll;
   double currentScroll;
+  int page = 1;
+
   @override
   void initState() {
     super.initState();
@@ -50,19 +49,6 @@ class _HomeState extends State<Home> {
     repoBloc = BlocProvider.of<RepoDataBloc>(context);
     radioBloc = BlocProvider.of<RadioBloc>(context);
     issueBloc = BlocProvider.of<IssueDataBloc>(context);
-
-    contr.addListener(() {
-      maxScroll = contr.position.maxScrollExtent - 10;
-      currentScroll = contr.position.pixels;
-      if (currentScroll > maxScroll) {
-        print('current Scroll : ' + currentScroll.toString());
-        print('maxScroll' + maxScroll.toString());
-        if (radioBloc.state.index == 0)
-          repoBloc.add(MoreRepo(keywords: search.text));
-        else
-          dataBloc.add(MoreData(keywords: search.text));
-      }
-    });
   }
 
   @override
@@ -77,6 +63,21 @@ class _HomeState extends State<Home> {
     ChooserBloc choose = BlocProvider.of(context)..add(Lazy());
     var _listHorizontal = ["Repositories", "Issue", "Users"];
 
+    if (choose.state.index == 0)
+      contr.addListener(() {
+        maxScroll = contr.position.maxScrollExtent;
+        currentScroll = contr.position.pixels;
+        if (currentScroll == maxScroll) {
+          print('current Scroll : ' + currentScroll.toString());
+          print('maxScroll' + maxScroll.toString());
+          if (radioBloc.state.index == 0)
+            repoBloc.add(MoreRepo(keywords: search.text));
+          if (radioBloc.state.index == 1)
+            issueBloc.add(MoreDataIssue(keywords: search.text));
+          if (radioBloc.state.index == 2)
+            dataBloc.add(MoreData(keywords: search.text));
+        }
+      });
     return BlocBuilder<ThemeBloc, ThemeState>(
       builder: (context, themeState) => BlocBuilder<RadioBloc, RadioState>(
         builder: (context, searchState) => GestureDetector(
@@ -84,101 +85,365 @@ class _HomeState extends State<Home> {
             FocusScope.of(context).unfocus();
           },
           child: Scaffold(
-            appBar: AppBar(
-              elevation: 0,
-              title: Row(
-                children: [
-                  GitIcon(
-                    size: 25,
-                  ),
-                  text(title: 'LookGit'),
-                ],
-              ),
-              backgroundColor: themeState.materialColor,
-            ),
-            body: NestedScrollView(
-              controller: contr,
-              headerSliverBuilder:
-                  (BuildContext context, bool innerBoxIsScrolled) {
-                return <Widget>[
-                  SliverAppBar(
-                    expandedHeight: width * .22,
-                    floating: false,
-                    pinned: false,
-                    backgroundColor: Colors.white,
-                    flexibleSpace: FlexibleSpaceBar(
-                      centerTitle: true,
-                      collapseMode: CollapseMode.none,
-                      background: Center(
-                          child: TextFormFieldBorder(
-                        hintText: 'Looking for something ?',
-                        suffix: Icon(LineIcons.search),
-                        onSubmitted: (String value) {
-                          print('Look for : ' + value);
-                          searchState.index == 0
-                              ? repoBloc.add(FetchRepo(keywords: value))
-                              : searchState.index == 1
-                                  ? issueBloc
-                                      .add(FetchDataIssue(keywords: value))
-                                  : dataBloc.add(FetchData(keywords: value));
-                        },
-                        globControl: search,
-                        globKey: searchGlob,
-                        isSecure: false,
-                      )),
+              appBar: AppBar(
+                elevation: 0,
+                title: Row(
+                  children: [
+                    GitIcon(
+                      size: 25,
                     ),
-                  ),
-                ];
-              },
-              body: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  FlutterRadioGroup(
-                      titles: _listHorizontal,
-                      labelVisible: true,
-                      activeColor: Colors.black,
-                      titleStyle: TextStyle(fontSize: 14),
-                      defaultSelected: searchState.index,
-                      orientation: RGOrientation.HORIZONTAL,
-                      onChanged: (index) {
-                        if (index == 0) return radioBloc.add(RepoEvent());
-                        if (index == 1) return radioBloc.add(IssueEvent());
-                        if (index == 2) return radioBloc.add(UserEvent());
-                      }),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    text(title: 'LookGit'),
+                  ],
+                ),
+                backgroundColor: themeState.materialColor,
+              ),
+              body: NestedScrollView(
+                controller: contr,
+                headerSliverBuilder:
+                    (BuildContext context, bool innerBoxIsScrolled) {
+                  return <Widget>[
+                    SliverAppBar(
+                      expandedHeight: width * .22,
+                      floating: false,
+                      pinned: false,
+                      backgroundColor: Colors.white,
+                      flexibleSpace: FlexibleSpaceBar(
+                        centerTitle: true,
+                        collapseMode: CollapseMode.none,
+                        background: Center(
+                            child: TextFormFieldBorder(
+                          hintText: 'Looking for something ?',
+                          suffix: Icon(LineIcons.search),
+                          onSubmitted: (String value) {
+                            print('Look for : ' + value);
+                            searchState.index == 0
+                                ? repoBloc.add(FetchRepo(keywords: value))
+                                : searchState.index == 1
+                                    ? issueBloc
+                                        .add(FetchDataIssue(keywords: value))
+                                    : dataBloc.add(FetchData(keywords: value));
+                          },
+                          globControl: search,
+                          globKey: searchGlob,
+                          isSecure: false,
+                        )),
+                      ),
+                    ),
+                  ];
+                },
+                body: BlocBuilder<ChooserBloc, ChooserState>(
+                  builder: (context, chooserState) => Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      BlocBuilder<ChooserBloc, ChooserState>(
-                        builder: (context, state) => ChooserButton(
-                          title: 'Lazy Loading',
-                          isSelected: state.index == 0,
-                          func: () {
-                            if (state.index == 1) choose.add(Lazy());
+                      FlutterRadioGroup(
+                          titles: _listHorizontal,
+                          labelVisible: true,
+                          activeColor: Colors.black,
+                          titleStyle: TextStyle(fontSize: 14),
+                          defaultSelected: searchState.index,
+                          orientation: RGOrientation.HORIZONTAL,
+                          onChanged: (index) {
+                            if (index == 0) return radioBloc.add(RepoEvent());
+                            if (index == 1) return radioBloc.add(IssueEvent());
+                            if (index == 2) return radioBloc.add(UserEvent());
+                          }),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          ChooserButton(
+                            title: 'Lazy Loading',
+                            isSelected: chooserState.index == 0,
+                            func: () {
+                              if (chooserState.index == 1) choose.add(Lazy());
 
-                            // test = !test;
-                            // test ? theme.add(ToBlack()) : theme.add(ToWhite());
-                          },
-                        ),
+                              // test = !test;
+                              // test ? theme.add(ToBlack()) : theme.add(ToWhite());
+                            },
+                          ),
+                          ChooserButton(
+                            title: 'Index',
+                            isSelected: chooserState.index == 1,
+                            func: () {
+                              if (chooserState.index == 0) choose.add(Index());
+                              // test = !test;
+                              // test ? theme.add(ToBlack()) : theme.add(ToWhite());
+                            },
+                          ),
+                        ],
                       ),
-                      BlocBuilder<ChooserBloc, ChooserState>(
-                        builder: (context, state) => ChooserButton(
-                          title: 'Index',
-                          isSelected: state.index == 1,
-                          func: () {
-                            if (state.index == 0) choose.add(Index());
-                            // test = !test;
-                            // test ? theme.add(ToBlack()) : theme.add(ToWhite());
-                          },
-                        ),
-                      ),
+                      Expanded(
+                          child: chooserState.index == 0
+                              ? buildList(searchState.index)
+                              : buildListIndex(searchState.index))
                     ],
                   ),
-                  Expanded(child: buildList(searchState.index))
-                ],
-              ),
-            ),
-          ),
+                ),
+              )),
         ),
+      ),
+    );
+  }
+
+  buildListIndex(int type) {
+    switch (type) {
+      case 0:
+        return BlocBuilder<RepoDataBloc, RepoDataState>(
+            builder: (context, state) {
+          if (state is RepoDataUnintialized) {
+            return Center(child: Container(child: Text('LookGit')));
+          }
+          if (state is RepoDataClear) {
+            return Text('Cari sesuatu load index');
+          }
+          if (state is RepoDataError) {
+            return Text(state.message);
+          }
+          if (state is RepoDataLoaded) {
+            return Stack(alignment: Alignment.bottomCenter, children: [
+              Container(
+                margin: EdgeInsets.only(bottom: 50),
+                child: WaterfallFlow.builder(
+                    itemCount: 10,
+                    gridDelegate:
+                        SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 1,
+                            crossAxisSpacing: 12,
+                            mainAxisSpacing: 12),
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemBuilder: (ctx, idx) {
+                      return Card(
+                        margin:
+                            EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                        elevation: 7,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30)),
+                          margin: EdgeInsets.symmetric(vertical: 25),
+                          padding: EdgeInsets.symmetric(horizontal: 25),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                flex: 7,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(4),
+                                          child: CachedNetworkImage(
+                                              height: 25,
+                                              width: 25,
+                                              fit: BoxFit.fill,
+                                              imageUrl: state
+                                                  .repo.item[idx].owner.avatar),
+                                        ),
+                                        SizedBox(width: 15),
+                                        Expanded(
+                                          flex: 3,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              text16Bold(
+                                                  title: inCaps(state
+                                                      .repo.item[idx].name)),
+                                              text10(
+                                                  title: state.repo.item[idx]
+                                                      .owner.login),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                    Container(
+                                      constraints:
+                                          BoxConstraints(maxHeight: 50),
+                                      child: text10(
+                                          title: state
+                                                  .repo.item[idx].description ??
+                                              ''),
+                                    ),
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                    Row(
+                                      children: [
+                                        state.repo.item[idx].language != null
+                                            ? CircleRandom(
+                                                index: idx % 5,
+                                              )
+                                            : Container(),
+                                        SizedBox(width: 5),
+                                        text10(
+                                            title:
+                                                state.repo.item[idx].language ??
+                                                    ''),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                  flex: 1,
+                                  child: Column(
+                                    children: [
+                                      EyeIcon(
+                                        size: 15,
+                                      ),
+                                      text10(
+                                          title: kPoint(
+                                              state.repo.item[idx].seenCount ??
+                                                  0)),
+                                    ],
+                                  ))
+                            ],
+                          ),
+                        ),
+                      );
+                    }),
+              ),
+              pagingIndex(0)
+            ]);
+          }
+          return Center(
+            child: Container(child: Text('Data Kosong')),
+          );
+        });
+
+        break;
+      case 1:
+        return BlocBuilder<IssueDataBloc, IssueDataState>(
+            builder: (context, state) {
+          if (state is IssueDataUnintialized) {
+            return Center(child: Container(child: Text('LookGit')));
+          }
+          if (state is IssueDataClear) {
+            return Text('Cari sesuatu load index');
+          }
+          if (state is IssueDataError) {
+            return Text(state.message);
+          }
+          if (state is IssueLoaded) {
+            return Stack(alignment: Alignment.bottomCenter, children: [
+              Container(
+                margin: EdgeInsets.only(bottom: 50),
+                child: WaterfallFlow.builder(
+                    itemCount: 10,
+                    gridDelegate:
+                        SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 1,
+                            crossAxisSpacing: 12,
+                            mainAxisSpacing: 12),
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemBuilder: (ctx, idx) {
+                      return Card(
+                        elevation: 7,
+                        margin: EdgeInsets.symmetric(horizontal: 15),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30)),
+                          margin: EdgeInsets.symmetric(vertical: 25),
+                          padding: EdgeInsets.symmetric(horizontal: 25),
+                          child: Row(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(4),
+                                child: CachedNetworkImage(
+                                    height: 25,
+                                    width: 25,
+                                    fit: BoxFit.fill,
+                                    imageUrl:
+                                        state.issue.items[idx].user.avatar),
+                              ),
+                              SizedBox(width: 15),
+                              Expanded(
+                                flex: 3,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    text16Bold(
+                                        title: inCaps(
+                                            state.issue.items[idx].title)),
+                                    Container(
+                                        constraints:
+                                            BoxConstraints(maxHeight: 50),
+                                        child: text10Overflow(
+                                            title:
+                                                state.issue.items[idx].body)),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }),
+              ),
+              pagingIndex(1)
+            ]);
+          }
+          return Center(
+            child: Container(child: Text('Data Kosong')),
+          );
+        });
+
+        break;
+    }
+  }
+
+  pagingIndex(int chooserIndex) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 15),
+      color: Colors.transparent,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          InkWell(
+              onTap: () {
+                if (page > 1) page = page - 1;
+                chooserIndex == 0
+                    ? issueBloc
+                        .add(FetchDataIssue(keywords: search.text, page: page))
+                    : issueBloc
+                        .add(FetchDataIssue(keywords: search.text, page: page));
+              },
+              child: Container(
+                height: 30,
+                width: 70,
+                decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(15)),
+                child: Center(
+                  child: CIcon(iconData: LineIcons.arrowLeft, size: 15),
+                ),
+              )),
+          text16Bold(title: '$page'),
+          InkWell(
+              onTap: () {
+                page = page + 1;
+                chooserIndex == 0
+                    ? issueBloc
+                        .add(FetchDataIssue(keywords: search.text, page: page))
+                    : issueBloc
+                        .add(FetchDataIssue(keywords: search.text, page: page));
+              },
+              child: Container(
+                height: 30,
+                width: 70,
+                decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(15)),
+                child: Center(
+                    child: CIcon(iconData: LineIcons.arrowRight, size: 15)),
+              )),
+        ],
       ),
     );
   }
@@ -258,18 +523,28 @@ class _HomeState extends State<Home> {
                                   SizedBox(
                                     height: 8,
                                   ),
-                                  text10(
-                                      title: state.repo.item[idx].description ??
-                                          ''),
+                                  Container(
+                                    constraints: BoxConstraints(maxHeight: 50),
+                                    child: text10(
+                                        title:
+                                            state.repo.item[idx].description ??
+                                                ''),
+                                  ),
                                   SizedBox(
                                     height: 8,
                                   ),
                                   Row(
                                     children: [
-                                      CircleRandom(),
+                                      state.repo.item[idx].language != null
+                                          ? CircleRandom(
+                                              index: idx % 5,
+                                            )
+                                          : Container(),
                                       SizedBox(width: 5),
                                       text10(
-                                          title: state.repo.item[idx].language),
+                                          title:
+                                              state.repo.item[idx].language ??
+                                                  ''),
                                     ],
                                   ),
                                 ],
@@ -293,13 +568,23 @@ class _HomeState extends State<Home> {
                       ),
                     );
                   }
-                  if (state.repo.totalCount == state.repo.item.length) {
-                    return Container();
-                  } else {
-                    return Center(
-                      child: Container(child: CircularProgressIndicator()),
-                    );
-                  }
+                  return SizedBox(
+                    width: 200.0,
+                    height: 100.0,
+                    child: Shimmer.fromColors(
+                        baseColor: Colors.grey[400],
+                        highlightColor: Colors.grey,
+                        child: Card(
+                            elevation: 10,
+                            margin: EdgeInsets.symmetric(
+                                horizontal: 15, vertical: 10),
+                            child: Row(
+                              children: [
+                                Expanded(flex: 1, child: Container()),
+                                Expanded(flex: 4, child: Container()),
+                              ],
+                            ))),
+                  );
                 });
           }
           return Center(
@@ -334,6 +619,7 @@ class _HomeState extends State<Home> {
                   if (idx < state.issue.items.length) {
                     return Card(
                       elevation: 7,
+                      margin: EdgeInsets.symmetric(horizontal: 15),
                       child: Container(
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(30)),
@@ -358,7 +644,11 @@ class _HomeState extends State<Home> {
                                   text16Bold(
                                       title:
                                           inCaps(state.issue.items[idx].title)),
-                                  text10Overflow(title: state.issue.items[idx].body),
+                                  Container(
+                                      constraints:
+                                          BoxConstraints(maxHeight: 50),
+                                      child: text10Overflow(
+                                          title: state.issue.items[idx].body)),
                                 ],
                               ),
                             ),
@@ -367,13 +657,9 @@ class _HomeState extends State<Home> {
                       ),
                     );
                   }
-                  if (state.issue.total == state.issue.items.length) {
-                    return Container();
-                  } else {
-                    return Center(
-                      child: Container(child: CircularProgressIndicator()),
-                    );
-                  }
+                  return Center(
+                    child: Container(child: CircularProgressIndicator()),
+                  );
                 });
           }
           return Center(
@@ -408,6 +694,7 @@ class _HomeState extends State<Home> {
                   if (idx < state.user.items.length) {
                     return Card(
                       elevation: 7,
+                      margin: EdgeInsets.symmetric(horizontal: 15),
                       child: Container(
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(30)),

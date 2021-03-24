@@ -10,7 +10,7 @@ part 'repo_data_state.dart';
 
 class RepoDataBloc extends Bloc<RepoDataEvent, RepoDataState> {
   RepoResults repo;
-  int page = 0;
+  int page = 1;
   RepoDataBloc() : super(RepoDataUnintialized());
 
   @override
@@ -18,21 +18,27 @@ class RepoDataBloc extends Bloc<RepoDataEvent, RepoDataState> {
     RepoDataEvent event,
   ) async* {
     if (event is FetchRepo) {
-      repo = await Git.fetchRepo(event.keywords, page, 10);
+      repo = await Git.fetchRepo(event.keywords, event.page ?? 1 , 10);
       repo.item.map((e) => print(e.name));
       yield RepoDataLoaded(repo: repo, hasReachedMax: false);
     }
     if (event is MoreRepo) {
-      RepoResults moreUser = await Git.fetchRepo(event.keywords, page++, 10);
-      RepoDataLoaded data = state as RepoDataLoaded;
-      if (moreUser == null) {
-        page--;
-        data.copyWith(hasReachedMax: true);
-        yield RepoDataError(message: 'Limit Akses Request');
+      if (repo.item.length < 10) {
+        yield RepoDataError(message: 'Data Kosong');
       } else {
+        RepoResults moreUser = await Git.fetchRepo(event.keywords, page++, 10);
         repo.item.addAll(moreUser.item);
-        yield RepoDataLoaded(repo: repo, hasReachedMax: false);
+        yield RepoDataLoaded(repo: repo,hasReachedMax: false);
       }
+      // RepoDataLoaded data = state as RepoDataLoaded;
+      // if (moreUser == null) {
+      //   page--;
+      //   data.copyWith(hasReachedMax: true);
+      //   yield RepoDataError(message: 'Limit Akses Request');
+      // } else {
+      //   repo.item.addAll(moreUser.item);
+      //   yield RepoDataLoaded(repo: repo, hasReachedMax: false);
+      // }
     }
     if (event is ClearRepo) {
       repo.item.clear();

@@ -3,6 +3,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class CircleRandom extends StatefulWidget {
+  final int index;
+
+  const CircleRandom({Key key, this.index}) : super(key: key);
   @override
   _CircleRandomState createState() => _CircleRandomState();
 }
@@ -25,7 +28,7 @@ class _CircleRandomState extends State<CircleRandom> {
       height: 8,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          color: colors.elementAt(random.nextInt(5))),
+          color: colors.elementAt(widget.index)),
     );
   }
 }

@@ -19,7 +19,7 @@ class IssueDataBloc extends Bloc<IssueDataEvent, IssueDataState> {
     IssueDataEvent event,
   ) async* {
     if (event is FetchDataIssue) {
-      issue = await Git.fetchIssue(event.keywords, page, 10);
+      issue = await Git.fetchIssue(event.keywords, event.page ?? 1, 10);
       issue.items.map((e) => print(e.id));
       yield IssueLoaded(issue: issue, hasReachedMax: false);
     }

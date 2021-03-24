@@ -19,7 +19,6 @@ class DataBloc extends Bloc<DataEvent, DataState> {
   ) async* {
     if (event is FetchData) {
       user = await Git.fetchUser(event.keywords, page, 10);
-      user.items.map((e) => print(e.login));
       yield DataLoaded(user: user, hasReachedMax: false);
     }
     if (event is MoreData) {
