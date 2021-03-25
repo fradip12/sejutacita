@@ -6,19 +6,22 @@ class Settings extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultAppBar(
       title: 'Settings',
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
-            children: [
-              Container(
-                height: 10,
-                width: 10,
-                color: Colors.amber,
-              )
-            ],
-          ),
-        ],
+      
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              children: [
+                Container(
+                  height: 10,
+                  width: 10,
+                  color: Colors.amber,
+                )
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
