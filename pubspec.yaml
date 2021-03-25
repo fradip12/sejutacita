@@ -16,7 +16,9 @@ dependencies:
   flutter_radio_group: ^2.0.0
   get: ^3.26.0
   http: ^0.13.1
+  hydrated_bloc: ^7.0.0
   line_icons: ^2.0.1
+  path_provider: ^2.0.1
   shared_preferences: ^2.0.5
   shimmer: ^1.1.2
   waterfall_flow: ^3.0.1

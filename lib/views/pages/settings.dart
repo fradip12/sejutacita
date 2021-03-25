@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:citav2/bloc/bloc.dart';
 import 'package:citav2/widgets/appbar/default_app.dart';
 import 'package:citav2/widgets/text/text.dart';
@@ -52,43 +53,44 @@ class Settings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     theme = BlocProvider.of<ThemeBloc>(context);
+    String urlImage =
+        "https://avatars.githubusercontent.com/u/65805640?s=460&u=bc0d9b5c006e297bdb5aa928d6acb46d732ddab1&v=4";
 
     return SafeArea(
       child: DefaultAppBar(
           title: 'Settings',
           body: Column(
             children: <Widget>[
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Container(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        mSetting(
-                            'Theme',
-                            'Change to ${theme.state.themeType == 'dark' ? 'Light' : 'Dark'}',
-                            true),
-                      ],
-                    ),
+              SingleChildScrollView(
+                child: Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      mSetting(
+                          'Theme',
+                          'Change to ${theme.state.themeType == 'dark' ? 'Light' : 'Dark'}',
+                          true),
+                    ],
                   ),
                 ),
-              )
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(80),
+                    child: CachedNetworkImage(
+                        width: 80,
+                        height: 80,
+                        fit: BoxFit.contain,
+                        imageUrl: urlImage),
+                  ),
+                ],
+              ),
+              text16Bold(
+                  title: 'Thank you for having me to join this Dev Test'),
             ],
           )),
     );
   }
-  // return DefaultAppBar(
-  //   title: 'Settings',
-  //   body: Padding(
-  //     padding: const EdgeInsets.all(16.0),
-  //     child: Column(
-  //       children: [
-  //         Row(
-  //           children: [text16Bold(title: 'Preferences')],
-  //         ),
-  //       ],
-  //     ),
-  //   ),
-  // );
-
 }

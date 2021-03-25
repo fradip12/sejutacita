@@ -345,10 +345,7 @@ class _HomeState extends State<Home> {
         return BlocBuilder<IssueDataBloc, IssueDataState>(
             builder: (context, state) {
           if (state is IssueDataUnintialized) {
-            return Center(
-                child: Container(
-              child: unintializedBackground()
-            ));
+            return Center(child: Container(child: unintializedBackground()));
           }
           if (state is IssueDataClear) {
             return Text('Cari sesuatu load index');
@@ -425,10 +422,7 @@ class _HomeState extends State<Home> {
       case 2:
         return BlocBuilder<DataBloc, DataState>(builder: (context, state) {
           if (state is DataUnintialized) {
-            return Center(
-                child: Container(
-              child: unintializedBackground()
-            ));
+            return Center(child: Container(child: unintializedBackground()));
           }
           if (state is DataClear) {
             return Text('Cari sesuatu load index');
@@ -613,10 +607,7 @@ class _HomeState extends State<Home> {
         return BlocBuilder<RepoDataBloc, RepoDataState>(
             builder: (context, state) {
           if (state is RepoDataUnintialized) {
-            return Center(
-                child: Container(
-              child: unintializedBackground()
-            ));
+            return Center(child: Container(child: unintializedBackground()));
           }
           if (state is RepoDataClear) {
             return Text('Cari sesuatu');
@@ -742,10 +733,7 @@ class _HomeState extends State<Home> {
         return BlocBuilder<IssueDataBloc, IssueDataState>(
             builder: (context, state) {
           if (state is IssueDataUnintialized) {
-            return Center(
-                child: Container(
-              child: unintializedBackground()
-            ));
+            return Center(child: Container(child: unintializedBackground()));
           }
           if (state is IssueDataClear) {
             return Text('Cari sesuatu');
@@ -816,10 +804,7 @@ class _HomeState extends State<Home> {
       case 2:
         return BlocBuilder<DataBloc, DataState>(builder: (context, state) {
           if (state is DataUnintialized) {
-            return Center(
-                child: Container(
-              child: unintializedBackground()
-            ));
+            return Center(child: Container(child: unintializedBackground()));
           }
           if (state is DataClear) {
             return Text('Cari sesuatu');

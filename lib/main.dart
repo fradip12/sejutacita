@@ -15,9 +15,14 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/route_manager.dart';
 import 'package:get/get_navigation/src/routes/transitions_type.dart' as tx;
 import 'package:citav2/bloc/bloc.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:path_provider/path_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  HydratedBloc.storage = await HydratedStorage.build(
+    storageDirectory: await getTemporaryDirectory(),
+  );
 
   await App.init();
   runApp(MyApp());
@@ -29,7 +34,11 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<ThemeBloc>(
-          create: (BuildContext context) => ThemeBloc(),
+          create: (BuildContext context) => ThemeBloc(ThemeState(
+              materialColor:
+                  HydratedBloc.storage.read('materialColor') ?? Colors.black,
+              textColor: HydratedBloc.storage.read('textColor') ?? Colors.white,
+              themeType: HydratedBloc.storage.read('themeType') ?? 'dark')),
         ),
         BlocProvider<ChooserBloc>(
           create: (BuildContext context) => ChooserBloc(),
@@ -46,7 +55,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<IssueDataBloc>(
           create: (BuildContext context) => IssueDataBloc(),
         ),
-         BlocProvider<PagingBloc>(
+        BlocProvider<PagingBloc>(
           create: (BuildContext context) => PagingBloc(),
         )
       ],

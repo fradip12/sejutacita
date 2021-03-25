@@ -40,6 +40,7 @@ class _SplashState extends State<Splash> {
         body: Center(
           child: GitIcon(
             size: (width * 0.5).toInt(),
+            color: state.textColor,
           ),
         ),
       ),
