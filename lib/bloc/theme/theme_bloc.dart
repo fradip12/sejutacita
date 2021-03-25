@@ -9,16 +9,25 @@ part 'theme_state.dart';
 
 class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
   ThemeBloc()
-      : super(ThemeState(materialColor: Colors.black, textColor: Colors.white));
+      : super(ThemeState(
+            materialColor: Colors.black,
+            textColor: Colors.white,
+            themeType: 'dark'));
 
   @override
   Stream<ThemeState> mapEventToState(
     ThemeEvent event,
-  ) async* {    
+  ) async* {
     if (event is ToWhite) {
-      yield ThemeState(materialColor: Colors.white, textColor: Colors.black);
+      yield ThemeState(
+          materialColor: Colors.white,
+          textColor: Colors.black,
+          themeType: 'light');
     } else if (event is ToBlack) {
-      yield ThemeState(materialColor: Colors.black, textColor: Colors.white);
+      yield ThemeState(
+          materialColor: Colors.black,
+          textColor: Colors.white,
+          themeType: 'dark');
     }
   }
 }

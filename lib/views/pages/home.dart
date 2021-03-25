@@ -90,111 +90,116 @@ class _HomeState extends State<Home> {
           onTap: () {
             FocusScope.of(context).unfocus();
           },
-          child: Scaffold(
-              appBar: AppBar(
-                elevation: 0,
-                actions: [
-                  CIcon(
-                    iconData: LineIcons.bars,
-                    size: 30,
-                    color: themeState.textColor,
-                    func: () {
-                      Get.toNamed('/setting');
-                    },
-                  )
-                ],
-                title: Row(
-                  children: [
-                    GitIcon(
-                      size: 25,
-                    ),
-                    text(title: 'LookGit'),
+          child: SafeArea(
+            child: Scaffold(
+                appBar: AppBar(
+                  elevation: 0,
+                  actions: [
+                    CIcon(
+                      iconData: LineIcons.bars,
+                      size: 30,
+                      color: themeState.textColor,
+                      func: () {
+                        Get.toNamed('/setting');
+                      },
+                    )
                   ],
-                ),
-                backgroundColor: themeState.materialColor,
-              ),
-              body: NestedScrollView(
-                controller: contr,
-                headerSliverBuilder:
-                    (BuildContext context, bool innerBoxIsScrolled) {
-                  return <Widget>[
-                    SliverAppBar(
-                      expandedHeight: width * .22,
-                      floating: false,
-                      pinned: false,
-                      backgroundColor: Colors.white,
-                      flexibleSpace: FlexibleSpaceBar(
-                        centerTitle: true,
-                        collapseMode: CollapseMode.none,
-                        background: Center(
-                            child: TextFormFieldBorder(
-                          hintText: 'Looking for something ?',
-                          suffix: Icon(LineIcons.search),
-                          onSubmitted: (String value) {
-                            print('Look for : ' + value);
-                            searchState.index == 0
-                                ? repoBloc.add(FetchRepo(keywords: value))
-                                : searchState.index == 1
-                                    ? issueBloc
-                                        .add(FetchDataIssue(keywords: value))
-                                    : dataBloc.add(FetchData(keywords: value));
-                          },
-                          globControl: search,
-                          globKey: searchGlob,
-                          isSecure: false,
-                        )),
-                      ),
-                    ),
-                  ];
-                },
-                body: BlocBuilder<ChooserBloc, ChooserState>(
-                  builder: (context, chooserState) => Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                  title: Row(
                     children: [
-                      FlutterRadioGroup(
-                          titles: _listHorizontal,
-                          labelVisible: true,
-                          activeColor: Colors.black,
-                          titleStyle: TextStyle(fontSize: 14),
-                          defaultSelected: searchState.index,
-                          orientation: RGOrientation.HORIZONTAL,
-                          onChanged: (index) {
-                            if (index == 0) return radioBloc.add(RepoEvent());
-                            if (index == 1) return radioBloc.add(IssueEvent());
-                            if (index == 2) return radioBloc.add(UserEvent());
-                          }),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          ChooserButton(
-                            title: 'Lazy Loading',
-                            isSelected: chooserState.index == 0,
-                            func: () {
-                              if (chooserState.index == 1) choose.add(Lazy());
-
-                              // test = !test;
-                              // test ? theme.add(ToBlack()) : theme.add(ToWhite());
-                            },
-                          ),
-                          ChooserButton(
-                            title: 'Index',
-                            isSelected: chooserState.index == 1,
-                            func: () {
-                              if (chooserState.index == 0) choose.add(Index());
-                              // test = !test;
-                              // test ? theme.add(ToBlack()) : theme.add(ToWhite());
-                            },
-                          ),
-                        ],
+                      GitIcon(
+                        size: 25,
                       ),
-                      Expanded(
-                          child: chooserState.index == 0
-                              ? buildList(searchState.index)
-                              : buildListIndex(searchState.index))
+                      text(title: 'LookGit'),
                     ],
                   ),
+                  backgroundColor: themeState.materialColor,
                 ),
-              )),
+                body: NestedScrollView(
+                  controller: contr,
+                  headerSliverBuilder:
+                      (BuildContext context, bool innerBoxIsScrolled) {
+                    return <Widget>[
+                      SliverAppBar(
+                        expandedHeight: width * .22,
+                        floating: false,
+                        pinned: false,
+                        backgroundColor: Colors.white,
+                        flexibleSpace: FlexibleSpaceBar(
+                          centerTitle: true,
+                          collapseMode: CollapseMode.none,
+                          background: Center(
+                              child: TextFormFieldBorder(
+                            hintText: 'Looking for something ?',
+                            suffix: Icon(LineIcons.search),
+                            onSubmitted: (String value) {
+                              print('Look for : ' + value);
+                              searchState.index == 0
+                                  ? repoBloc.add(FetchRepo(keywords: value))
+                                  : searchState.index == 1
+                                      ? issueBloc
+                                          .add(FetchDataIssue(keywords: value))
+                                      : dataBloc
+                                          .add(FetchData(keywords: value));
+                            },
+                            globControl: search,
+                            globKey: searchGlob,
+                            isSecure: false,
+                          )),
+                        ),
+                      ),
+                    ];
+                  },
+                  body: BlocBuilder<ChooserBloc, ChooserState>(
+                    builder: (context, chooserState) => Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        FlutterRadioGroup(
+                            titles: _listHorizontal,
+                            labelVisible: true,
+                            activeColor: Colors.black,
+                            titleStyle: TextStyle(fontSize: 14),
+                            defaultSelected: searchState.index,
+                            orientation: RGOrientation.HORIZONTAL,
+                            onChanged: (index) {
+                              if (index == 0) return radioBloc.add(RepoEvent());
+                              if (index == 1)
+                                return radioBloc.add(IssueEvent());
+                              if (index == 2) return radioBloc.add(UserEvent());
+                            }),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            ChooserButton(
+                              title: 'Lazy Loading',
+                              isSelected: chooserState.index == 0,
+                              func: () {
+                                if (chooserState.index == 1) choose.add(Lazy());
+
+                                // test = !test;
+                                // test ? theme.add(ToBlack()) : theme.add(ToWhite());
+                              },
+                            ),
+                            ChooserButton(
+                              title: 'Index',
+                              isSelected: chooserState.index == 1,
+                              func: () {
+                                if (chooserState.index == 0)
+                                  choose.add(Index());
+                                // test = !test;
+                                // test ? theme.add(ToBlack()) : theme.add(ToWhite());
+                              },
+                            ),
+                          ],
+                        ),
+                        Expanded(
+                            child: chooserState.index == 0
+                                ? buildList(searchState.index)
+                                : buildListIndex(searchState.index))
+                      ],
+                    ),
+                  ),
+                )),
+          ),
         ),
       ),
     );
@@ -206,10 +211,13 @@ class _HomeState extends State<Home> {
         return BlocBuilder<RepoDataBloc, RepoDataState>(
             builder: (context, state) {
           if (state is RepoDataUnintialized) {
-            return Center(child: Container(child: Text('LookGit')));
+            return Center(
+                child: Container(
+              child: unintializedBackground(),
+            ));
           }
           if (state is RepoDataClear) {
-            return Text('Cari sesuatu load index');
+            return Text('Cari sesuatu');
           }
           if (state is RepoDataError) {
             return Text(state.message);
@@ -337,7 +345,10 @@ class _HomeState extends State<Home> {
         return BlocBuilder<IssueDataBloc, IssueDataState>(
             builder: (context, state) {
           if (state is IssueDataUnintialized) {
-            return Center(child: Container(child: Text('LookGit')));
+            return Center(
+                child: Container(
+              child: unintializedBackground()
+            ));
           }
           if (state is IssueDataClear) {
             return Text('Cari sesuatu load index');
@@ -414,7 +425,10 @@ class _HomeState extends State<Home> {
       case 2:
         return BlocBuilder<DataBloc, DataState>(builder: (context, state) {
           if (state is DataUnintialized) {
-            return Center(child: Container(child: Text('LookGit')));
+            return Center(
+                child: Container(
+              child: unintializedBackground()
+            ));
           }
           if (state is DataClear) {
             return Text('Cari sesuatu load index');
@@ -488,6 +502,13 @@ class _HomeState extends State<Home> {
 
         break;
     }
+  }
+
+  unintializedBackground() {
+    return GitIcon(
+      size: 350,
+      color: Colors.grey[100],
+    );
   }
 
   pagingIndex(int chooserIndex) {
@@ -592,7 +613,10 @@ class _HomeState extends State<Home> {
         return BlocBuilder<RepoDataBloc, RepoDataState>(
             builder: (context, state) {
           if (state is RepoDataUnintialized) {
-            return Center(child: Container(child: Text('LookGit')));
+            return Center(
+                child: Container(
+              child: unintializedBackground()
+            ));
           }
           if (state is RepoDataClear) {
             return Text('Cari sesuatu');
@@ -718,7 +742,10 @@ class _HomeState extends State<Home> {
         return BlocBuilder<IssueDataBloc, IssueDataState>(
             builder: (context, state) {
           if (state is IssueDataUnintialized) {
-            return Center(child: Container(child: Text('LookGit')));
+            return Center(
+                child: Container(
+              child: unintializedBackground()
+            ));
           }
           if (state is IssueDataClear) {
             return Text('Cari sesuatu');
@@ -789,7 +816,10 @@ class _HomeState extends State<Home> {
       case 2:
         return BlocBuilder<DataBloc, DataState>(builder: (context, state) {
           if (state is DataUnintialized) {
-            return Center(child: Container(child: Text('LookGit')));
+            return Center(
+                child: Container(
+              child: unintializedBackground()
+            ));
           }
           if (state is DataClear) {
             return Text('Cari sesuatu');

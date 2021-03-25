@@ -29,6 +29,15 @@ Widget text10({@required String title}) {
   );
 }
 
+Widget text14({@required String title}) {
+  return BlocBuilder<ThemeBloc, ThemeState>(
+    builder: (context, state) => Text(
+      title,
+      style: TextStyle(fontSize: 14, color: Colors.black),
+    ),
+  );
+}
+
 Widget text10Overflow({@required String title}) {
   return BlocBuilder<ThemeBloc, ThemeState>(
     builder: (context, state) => Text(
@@ -47,6 +56,7 @@ Widget text16Bold({@required String title}) {
         fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
   );
 }
+
 Widget text16WBold({@required String title}) {
   return Text(
     title,
@@ -54,6 +64,7 @@ Widget text16WBold({@required String title}) {
         fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
   );
 }
+
 Widget chooserText({@required String title, Color color}) {
   return Text(
     title,
