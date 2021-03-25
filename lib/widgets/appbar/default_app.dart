@@ -26,9 +26,9 @@ class DefaultAppBar extends StatelessWidget {
                 LineIcons.arrowCircleLeft,
                 color: state.textColor,
               ),
-            ),
+            ): Container(),
             title: text(title: title),
-            backgroundColor: state.materialColor) : Container(),
+            backgroundColor: state.materialColor) ,
         body: body,
       ),
     );
