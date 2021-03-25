@@ -65,9 +65,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         builder: EasyLoading.init(),
         initialRoute: '/',
-        theme: ThemeData(
-          textTheme: GoogleFonts.poppinsTextTheme(textTheme)
-        ),
+        theme: ThemeData(textTheme: GoogleFonts.poppinsTextTheme(textTheme)),
         getPages: [
           GetPage(
               name: '/', page: () => Splash(), transition: tx.Transition.zoom),
