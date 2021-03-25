@@ -49,9 +49,10 @@ Widget text10Overflow({@required String title}) {
   );
 }
 
-Widget text16Bold({@required String title}) {
+Widget text16Bold({@required String title, bool center = false}) {
   return Text(
     title,
+    textAlign: center ? TextAlign.center : TextAlign.start,
     style: TextStyle(
         fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
   );

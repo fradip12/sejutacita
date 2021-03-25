@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:citav2/bloc/bloc.dart';
+import 'package:citav2/core/responsive.dart';
 import 'package:citav2/widgets/appbar/default_app.dart';
 import 'package:citav2/widgets/text/text.dart';
 import 'package:flutter/material.dart';
@@ -75,7 +76,7 @@ class Settings extends StatelessWidget {
                 ),
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(80),
@@ -87,8 +88,12 @@ class Settings extends StatelessWidget {
                   ),
                 ],
               ),
-              text16Bold(
-                  title: 'Thank you for having me to join this Dev Test'),
+              Container(
+                constraints: BoxConstraints(maxWidth: getWidth(context) * 0.6),
+                child: text16Bold(
+                    center: true,
+                    title: 'Thank you for having me to join this Dev Test'),
+              ),
             ],
           )),
     );

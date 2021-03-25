@@ -217,10 +217,10 @@ class _HomeState extends State<Home> {
             ));
           }
           if (state is RepoDataClear) {
-            return Text('Cari sesuatu');
+            return text16Bold(title:'Cari sesuatu');
           }
           if (state is RepoDataError) {
-            return Text(state.message);
+            return text16Bold(title:state.message);
           }
           if (state is RepoDataLoaded) {
             return Stack(alignment: Alignment.bottomCenter, children: [
@@ -336,7 +336,7 @@ class _HomeState extends State<Home> {
             ]);
           }
           return Center(
-            child: Container(child: Text('Data Kosong')),
+            child: Container(child: text16Bold(title:'Data Kosong')),
           );
         });
 
@@ -348,10 +348,10 @@ class _HomeState extends State<Home> {
             return Center(child: Container(child: unintializedBackground()));
           }
           if (state is IssueDataClear) {
-            return Text('Cari sesuatu load index');
+            return text16Bold(title:'Cari sesuatu load index');
           }
           if (state is IssueDataError) {
-            return Text(state.message);
+            return text16Bold(title:state.message);
           }
           if (state is IssueLoaded) {
             return Stack(alignment: Alignment.bottomCenter, children: [
@@ -414,7 +414,7 @@ class _HomeState extends State<Home> {
             ]);
           }
           return Center(
-            child: Container(child: Text('Data Kosong')),
+            child: Container(child: text16Bold(title : 'Data Kosong')),
           );
         });
 
@@ -425,10 +425,10 @@ class _HomeState extends State<Home> {
             return Center(child: Container(child: unintializedBackground()));
           }
           if (state is DataClear) {
-            return Text('Cari sesuatu load index');
+            return text16Bold(title : 'Cari sesuatu load index');
           }
           if (state is DataError) {
-            return Text(state.message);
+            return text16Bold(title : state.message);
           }
           if (state is DataLoaded) {
             return Stack(alignment: Alignment.bottomCenter, children: [
@@ -490,7 +490,7 @@ class _HomeState extends State<Home> {
             ]);
           }
           return Center(
-            child: Container(child: Text('Data Kosong')),
+            child: Container(child: text16Bold(title : 'Data Kosong')),
           );
         });
 
@@ -610,10 +610,10 @@ class _HomeState extends State<Home> {
             return Center(child: Container(child: unintializedBackground()));
           }
           if (state is RepoDataClear) {
-            return Text('Cari sesuatu');
+            return text16Bold(title : 'Cari sesuatu');
           }
           if (state is RepoDataError) {
-            return Text(state.message);
+            return text16Bold(title : state.message);
           }
           if (state is RepoDataLoaded) {
             return WaterfallFlow.builder(
@@ -725,7 +725,7 @@ class _HomeState extends State<Home> {
                 });
           }
           return Center(
-            child: Container(child: Text('Data Kosong')),
+            child: Container(child: text16Bold(title : 'Data Kosong')),
           );
         });
         break;
@@ -736,10 +736,10 @@ class _HomeState extends State<Home> {
             return Center(child: Container(child: unintializedBackground()));
           }
           if (state is IssueDataClear) {
-            return Text('Cari sesuatu');
+            return text16Bold(title : 'Cari sesuatu');
           }
           if (state is IssueDataError) {
-            return Text(state.message);
+            return text16Bold(title : state.message);
           } else if (state is IssueLoaded) {
             return WaterfallFlow.builder(
                 itemCount: state.hasReachedMax
@@ -807,10 +807,10 @@ class _HomeState extends State<Home> {
             return Center(child: Container(child: unintializedBackground()));
           }
           if (state is DataClear) {
-            return Text('Cari sesuatu');
+            return text16Bold(title : 'Cari sesuatu');
           }
           if (state is DataError) {
-            return Text(state.message);
+            return text16Bold(title : state.message);
           } else if (state is DataLoaded) {
             return WaterfallFlow.builder(
                 itemCount: state.hasReachedMax
