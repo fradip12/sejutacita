@@ -1,16 +1,20 @@
-# citav2
+# LookGit
 
-A new Flutter project.
+Sejuta Cita Dev Test.
+
+LookGit. Looking for something in Git.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+Thank you for having me to join this Dev Test
 
-A few resources to get you started if this is your first Flutter project:
+Sorry if my code wasn't clean already,
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+or if there is a bug/error inside this app
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+
+Best Regards..
+
+Fradip
+:))
