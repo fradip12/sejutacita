@@ -1,12 +1,24 @@
+import 'package:citav2/widgets/appbar/default_app.dart';
 import 'package:flutter/material.dart';
 
 class Settings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        child : Text('Settings')
+    return DefaultAppBar(
+      title: 'Settings',
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            children: [
+              Container(
+                height: 10,
+                width: 10,
+                color: Colors.amber,
+              )
+            ],
+          ),
+        ],
       ),
     );
   }

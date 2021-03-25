@@ -5,7 +5,8 @@ class DataEvent {}
 
 class FetchData extends DataEvent {
   final String keywords;
-  FetchData({this.keywords});
+  final int page;
+  FetchData({this.keywords,this.page});
 }
 
 class MoreData extends DataEvent {

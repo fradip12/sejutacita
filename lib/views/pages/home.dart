@@ -4,11 +4,13 @@ import 'package:citav2/bloc/chooser/chooser_bloc.dart';
 import 'package:citav2/bloc/data/issue_data/issue_data_bloc.dart';
 import 'package:citav2/bloc/data/repo_data/repo_data_bloc.dart';
 import 'package:citav2/bloc/data/user_data/data_bloc.dart';
+import 'package:citav2/bloc/paging/paging_bloc.dart';
 import 'package:citav2/bloc/radio/radio_bloc.dart';
 import 'package:citav2/core/responsive.dart';
 import 'package:citav2/core/services/extension.dart';
 import 'package:citav2/widgets/button/chooser_button.dart';
 import 'package:citav2/widgets/button/default_icon.dart';
+import 'package:citav2/widgets/button/paging_button.dart';
 import 'package:citav2/widgets/circle_random.dart';
 import 'package:citav2/widgets/custom_icon.dart';
 import 'package:citav2/widgets/eye_icon.dart';
@@ -18,6 +20,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_radio_group/flutter_radio_group.dart';
+import 'package:get/route_manager.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:waterfall_flow/waterfall_flow.dart';
@@ -37,6 +40,7 @@ class _HomeState extends State<Home> {
   DataBloc dataBloc;
   RepoDataBloc repoBloc;
   IssueDataBloc issueBloc;
+  PagingBloc pageEvent;
   RadioBloc radioBloc;
   double maxScroll;
   double currentScroll;
@@ -49,6 +53,8 @@ class _HomeState extends State<Home> {
     repoBloc = BlocProvider.of<RepoDataBloc>(context);
     radioBloc = BlocProvider.of<RadioBloc>(context);
     issueBloc = BlocProvider.of<IssueDataBloc>(context);
+
+    pageEvent = BlocProvider.of<PagingBloc>(context);
   }
 
   @override
@@ -87,6 +93,16 @@ class _HomeState extends State<Home> {
           child: Scaffold(
               appBar: AppBar(
                 elevation: 0,
+                actions: [
+                  CIcon(
+                    iconData: LineIcons.bars,
+                    size: 30,
+                    color: themeState.textColor,
+                    func: () {
+                      Get.toNamed('/setting');
+                    },
+                  )
+                ],
                 title: Row(
                   children: [
                     GitIcon(
@@ -395,57 +411,179 @@ class _HomeState extends State<Home> {
         });
 
         break;
+      case 2:
+        return BlocBuilder<DataBloc, DataState>(builder: (context, state) {
+          if (state is DataUnintialized) {
+            return Center(child: Container(child: Text('LookGit')));
+          }
+          if (state is DataClear) {
+            return Text('Cari sesuatu load index');
+          }
+          if (state is DataError) {
+            return Text(state.message);
+          }
+          if (state is DataLoaded) {
+            return Stack(alignment: Alignment.bottomCenter, children: [
+              Container(
+                margin: EdgeInsets.only(bottom: 50),
+                child: WaterfallFlow.builder(
+                    itemCount: 10,
+                    gridDelegate:
+                        SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 1,
+                            crossAxisSpacing: 12,
+                            mainAxisSpacing: 12),
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemBuilder: (ctx, idx) {
+                      return Card(
+                        elevation: 7,
+                        margin: EdgeInsets.symmetric(horizontal: 15),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30)),
+                          margin: EdgeInsets.symmetric(vertical: 25),
+                          padding: EdgeInsets.symmetric(horizontal: 25),
+                          child: Row(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(4),
+                                child: CachedNetworkImage(
+                                    height: 25,
+                                    width: 25,
+                                    fit: BoxFit.fill,
+                                    imageUrl: state.user.items[idx].avatar),
+                              ),
+                              SizedBox(width: 15),
+                              Expanded(
+                                flex: 3,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    text16Bold(
+                                        title: inCaps(
+                                            state.user.items[idx].login)),
+                                    text10(title: state.user.items[idx].type),
+                                  ],
+                                ),
+                              ),
+                              Card(
+                                  elevation: 7,
+                                  child: Container(
+                                      padding: EdgeInsets.all(8),
+                                      child: text10(title: 'Follow'))),
+                            ],
+                          ),
+                        ),
+                      );
+                    }),
+              ),
+              pagingIndex(2)
+            ]);
+          }
+          return Center(
+            child: Container(child: Text('Data Kosong')),
+          );
+        });
+
+        break;
     }
   }
 
   pagingIndex(int chooserIndex) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 15),
-      color: Colors.transparent,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          InkWell(
-              onTap: () {
-                if (page > 1) page = page - 1;
-                chooserIndex == 0
-                    ? issueBloc
-                        .add(FetchDataIssue(keywords: search.text, page: page))
-                    : issueBloc
-                        .add(FetchDataIssue(keywords: search.text, page: page));
-              },
-              child: Container(
-                height: 30,
-                width: 70,
-                decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(15)),
-                child: Center(
-                  child: CIcon(iconData: LineIcons.arrowLeft, size: 15),
+    switch (chooserIndex) {
+      case 0:
+        return BlocBuilder<PagingBloc, PagingState>(
+          builder: (context, pageState) => Container(
+            margin: EdgeInsets.only(bottom: 15),
+            color: Colors.transparent,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                PagingButton(
+                  icon: LineIcons.arrowLeft,
+                  func: () {
+                    pageEvent.add(Back());
+                    repoBloc.add(FetchRepo(
+                        keywords: search.text, page: pageState.index));
+                  },
                 ),
-              )),
-          text16Bold(title: '$page'),
-          InkWell(
-              onTap: () {
-                page = page + 1;
-                chooserIndex == 0
-                    ? issueBloc
-                        .add(FetchDataIssue(keywords: search.text, page: page))
-                    : issueBloc
-                        .add(FetchDataIssue(keywords: search.text, page: page));
-              },
-              child: Container(
-                height: 30,
-                width: 70,
-                decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(15)),
-                child: Center(
-                    child: CIcon(iconData: LineIcons.arrowRight, size: 15)),
-              )),
-        ],
-      ),
-    );
+                text16Bold(title: '${pageState.index}'),
+                PagingButton(
+                  icon: LineIcons.arrowRight,
+                  func: () {
+                    pageEvent.add(Next());
+                    repoBloc.add(FetchRepo(
+                        keywords: search.text, page: pageState.index));
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+        break;
+      case 1:
+        return BlocBuilder<PagingBloc, PagingState>(
+          builder: (context, pageState) => Container(
+            margin: EdgeInsets.only(bottom: 15),
+            color: Colors.transparent,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                PagingButton(
+                  icon: LineIcons.arrowLeft,
+                  func: () {
+                    pageEvent.add(Back());
+                    issueBloc.add(FetchDataIssue(
+                        keywords: search.text, page: pageState.index));
+                  },
+                ),
+                text16Bold(title: '${pageState.index}'),
+                PagingButton(
+                  icon: LineIcons.arrowRight,
+                  func: () {
+                    pageEvent.add(Next());
+                    issueBloc.add(FetchDataIssue(
+                        keywords: search.text, page: pageState.index));
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+        break;
+      case 2:
+        return BlocBuilder<PagingBloc, PagingState>(
+          builder: (context, pageState) => Container(
+            margin: EdgeInsets.only(bottom: 15),
+            color: Colors.transparent,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                PagingButton(
+                  icon: LineIcons.arrowLeft,
+                  func: () {
+                    pageEvent.add(Back());
+                    dataBloc.add(FetchData(
+                        keywords: search.text, page: pageState.index));
+                  },
+                ),
+                text16Bold(title: '${pageState.index}'),
+                PagingButton(
+                  icon: LineIcons.arrowRight,
+                  func: () {
+                    pageEvent.add(Next());
+                    dataBloc.add(FetchData(
+                        keywords: search.text, page: pageState.index));
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+        break;
+      default:
+    }
   }
 
   buildList(int type) {

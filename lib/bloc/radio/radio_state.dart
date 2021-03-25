@@ -4,5 +4,9 @@ part of 'radio_bloc.dart';
 class RadioState {
   final int index;
   final String keywords;
-  RadioState({this.index,this.keywords});
+
+  RadioState({
+    this.index,
+    this.keywords,
+  });
 }
