@@ -60,6 +60,7 @@ class Settings extends StatelessWidget {
     return SafeArea(
       child: DefaultAppBar(
           title: 'Settings',
+          back : true,
           body: Column(
             children: <Widget>[
               SingleChildScrollView(
