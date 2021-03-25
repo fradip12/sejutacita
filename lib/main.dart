@@ -15,6 +15,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/route_manager.dart';
 import 'package:get/get_navigation/src/routes/transitions_type.dart' as tx;
 import 'package:citav2/bloc/bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -31,6 +32,7 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return MultiBlocProvider(
       providers: [
         BlocProvider<ThemeBloc>(
@@ -63,6 +65,9 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         builder: EasyLoading.init(),
         initialRoute: '/',
+        theme: ThemeData(
+          textTheme: GoogleFonts.poppinsTextTheme(textTheme)
+        ),
         getPages: [
           GetPage(
               name: '/', page: () => Splash(), transition: tx.Transition.zoom),
