@@ -9,15 +9,16 @@ class DefaultAppBar extends StatelessWidget {
   final String title;
   final String leading;
   final Widget body;
+  final bool back;
 
-  const DefaultAppBar({Key key, this.title, this.leading, this.body})
+  const DefaultAppBar({Key key, this.title, this.leading, this.body,this.back})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ThemeBloc, ThemeState>(
       builder: (context, state) => Scaffold(
         appBar: AppBar(
-            leading: InkWell(
+            leading: back ? InkWell(
               onTap: () {
                 Get.back();
               },
@@ -27,7 +28,7 @@ class DefaultAppBar extends StatelessWidget {
               ),
             ),
             title: text(title: title),
-            backgroundColor: state.materialColor),
+            backgroundColor: state.materialColor) : Container(),
         body: body,
       ),
     );
