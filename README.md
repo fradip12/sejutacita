@@ -12,8 +12,9 @@ Sorry if my code wasn't clean already,
 
 or if there is a bug/error inside this app
 
-Best Regards
+
+
+Best Regards..
 
 Fradip
-
 :))
