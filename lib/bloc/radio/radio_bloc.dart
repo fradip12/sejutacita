@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:citav2/bloc/paging/paging_bloc.dart';
 import 'package:meta/meta.dart';
 
 part 'radio_event.dart';

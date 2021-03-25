@@ -14,6 +14,7 @@ import 'package:citav2/widgets/button/paging_button.dart';
 import 'package:citav2/widgets/circle_random.dart';
 import 'package:citav2/widgets/custom_icon.dart';
 import 'package:citav2/widgets/eye_icon.dart';
+import 'package:citav2/widgets/item_shimmer.dart';
 import 'package:citav2/widgets/text/text.dart';
 import 'package:citav2/widgets/text/text_field.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,7 +23,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_radio_group/flutter_radio_group.dart';
 import 'package:get/route_manager.dart';
 import 'package:line_icons/line_icons.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:waterfall_flow/waterfall_flow.dart';
 
 class Home extends StatefulWidget {
@@ -706,23 +706,7 @@ class _HomeState extends State<Home> {
                       ),
                     );
                   }
-                  return SizedBox(
-                    width: 200.0,
-                    height: 100.0,
-                    child: Shimmer.fromColors(
-                        baseColor: Colors.grey[400],
-                        highlightColor: Colors.grey,
-                        child: Card(
-                            elevation: 10,
-                            margin: EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 10),
-                            child: Row(
-                              children: [
-                                Expanded(flex: 1, child: Container()),
-                                Expanded(flex: 4, child: Container()),
-                              ],
-                            ))),
-                  );
+                  return LoadItem();
                 });
           }
           return Center(
@@ -795,14 +779,10 @@ class _HomeState extends State<Home> {
                       ),
                     );
                   }
-                  return Center(
-                    child: Container(child: CircularProgressIndicator()),
-                  );
+                  return LoadItem();
                 });
           }
-          return Center(
-            child: Container(child: CircularProgressIndicator()),
-          );
+          return LoadItem();
         });
 
         break;
@@ -870,19 +850,12 @@ class _HomeState extends State<Home> {
                         ),
                       ),
                     );
-                  }
-                  if (state.user.total == state.user.items.length) {
-                    return Container();
                   } else {
-                    return Center(
-                      child: Container(child: CircularProgressIndicator()),
-                    );
+                    return LoadItem();
                   }
                 });
           }
-          return Center(
-            child: Container(child: CircularProgressIndicator()),
-          );
+          return LoadItem();
         });
 
         break;
