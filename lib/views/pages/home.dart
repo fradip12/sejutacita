@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:citav2/bloc/bloc.dart';
 import 'package:citav2/bloc/fetch_item/fetchitem_bloc.dart';
 import 'package:citav2/bloc/login/login_bloc.dart';
+import 'package:citav2/core/models/item/item_model.dart';
 import 'package:citav2/core/responsive.dart';
 import 'package:citav2/core/services/api.dart';
 import 'package:citav2/widgets/button/default_icon.dart';
@@ -29,10 +30,13 @@ class _HomeState extends State<Home> {
   double maxScroll;
   double currentScroll;
   int page = 1;
+  FetchItemBloc homeBloc;
 
   @override
   void initState() {
     super.initState();
+    homeBloc = BlocProvider.of<FetchItemBloc>(context);
+    print(homeBloc.state);
   }
 
   @override
@@ -49,7 +53,14 @@ class _HomeState extends State<Home> {
         builder: (context, themeState) =>
             BlocBuilder<FetchItemBloc, FetchitemState>(
                 builder: (context, homeState) {
-              print(homeState);
+              homeBloc.add(FetchDataHome());
+              List<ItemResult> data;
+
+              if (homeState is FetchitemLoaded) {
+                print('from home homestate is ');
+                print(homeState.data.length);
+                data = homeState.data;
+              }
               return GestureDetector(
                 onTap: () {
                   FocusScope.of(context).unfocus();
@@ -113,7 +124,7 @@ class _HomeState extends State<Home> {
                                           left: 12.0, right: 12.0),
                                       child: GridView.builder(
                                         scrollDirection: Axis.vertical,
-                                        itemCount: 12,
+                                        itemCount: data.length,
                                         shrinkWrap: true,
                                         physics: NeverScrollableScrollPhysics(),
                                         itemBuilder: (context, index) {
@@ -125,16 +136,35 @@ class _HomeState extends State<Home> {
                                                 borderRadius: BorderRadius.all(
                                                     Radius.circular(8.0)),
                                                 child: CachedNetworkImage(
-                                                  imageUrl:
-                                                      'https://media.suara.com/pictures/970x544/2020/03/05/64264-strategi-mengurangi-jumlah-pakaian-di-rumah.jpg',
+                                                  imageUrl: data[index].image,
                                                   fit: BoxFit.cover,
                                                   height: width * 0.5,
                                                   width: width,
                                                 ),
                                               ),
-                                              _text('Nama Item', fontSize: 12),
                                               _text(
-                                                'Harga',
+                                                  data[index].title ??
+                                                      'Nama Item',
+                                                  fontSize: 12),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  _text(
+                                                    '\$ ${data[index].price.toDouble()}',
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      _text(
+                                                        'Rating : ',
+                                                      ),
+                                                      _text(
+                                                        '${data[index].rating.rate}',
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
                                               ),
                                             ],
                                           );
@@ -164,19 +194,9 @@ class _HomeState extends State<Home> {
 Widget _text(String text,
     {var fontSize = 12.0,
     textColor = Colors.black,
-    var isCentered = false,
-    var maxLine = 1,
-    var lineThrough = false,
     var latterSpacing = 0.25,
-    var textAllCaps = false,
-    var isLongText = false}) {
+    var textAllCaps = false}) {
   return Text(textAllCaps ? text.toUpperCase() : text,
-      textAlign: isCentered ? TextAlign.center : TextAlign.start,
-      maxLines: isLongText ? null : maxLine,
       style: TextStyle(
-          decoration:
-              lineThrough ? TextDecoration.lineThrough : TextDecoration.none,
-          color: textColor,
-          height: 1.5,
-          letterSpacing: latterSpacing));
+          color: textColor, height: 1.5, letterSpacing: latterSpacing));
 }

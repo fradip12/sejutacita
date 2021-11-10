@@ -15,7 +15,7 @@ class Git {
     return value;
   }
 
-  static Future<List<ItemResult>> fetchData({String user, String pass}) async {
+  static Future<List<ItemResult>> fetchData() async {
     final response =
         await http.get(Uri.parse('https://fakestoreapi.com/products'));
     List<ItemResult> data = [];

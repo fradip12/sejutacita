@@ -8,3 +8,9 @@ abstract class FetchitemState extends Equatable {
 }
 
 class FetchitemInitial extends FetchitemState {}
+
+class FetchitemLoaded extends FetchitemState {
+  final List<ItemResult> data;
+
+  FetchitemLoaded({this.data});
+}

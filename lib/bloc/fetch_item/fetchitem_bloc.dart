@@ -1,4 +1,6 @@
 import 'package:bloc/bloc.dart';
+import 'package:citav2/core/models/item/item_model.dart';
+import 'package:citav2/core/services/api.dart';
 import 'package:equatable/equatable.dart';
 
 part 'fetchitem_event.dart';
@@ -10,5 +12,12 @@ class FetchItemBloc extends Bloc<FetchitemEvent, FetchitemState> {
   @override
   Stream<FetchitemState> mapEventToState(
     FetchitemEvent event,
-  ) async* {}
+  ) async* {
+    if (event is FetchDataHome) {
+      final response = await Git.fetchData();
+      print('data home from bloc');
+      print(response);
+      yield FetchitemLoaded(data: response);
+    }
+  }
 }

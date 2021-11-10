@@ -1,6 +1,6 @@
 # LookGit
 
-Sejuta Cita Dev Test.
+Inspira Dev Test.
 
 LookGit. Looking for something in Git.
 

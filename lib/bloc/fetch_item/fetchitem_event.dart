@@ -6,3 +6,5 @@ abstract class FetchitemEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
+class FetchDataHome extends FetchitemEvent {}
