@@ -11,11 +11,8 @@ class Git {
     final response = await http
         .get(Uri.parse(BASE_URL + '/api/method/login?usr=$user&pwd=$pass'));
 
-    if (response.statusCode == 200) {
-      LoginResult value = LoginResult.fromJson(json.decode(response.body));
-      return value;
-    }
-    return throw Exception('Unable to get data');
+    LoginResult value = LoginResult.fromJson(json.decode(response.body));
+    return value;
   }
 
   static Future<ItemResult> fetchData({String user, String pass}) async {

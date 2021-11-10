@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:citav2/bloc/bloc.dart';
+import 'package:citav2/bloc/login/login_bloc.dart';
 import 'package:citav2/core/responsive.dart';
 import 'package:citav2/widgets/button/default_icon.dart';
 import 'package:citav2/widgets/custom_icon.dart';
@@ -30,8 +31,6 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-
-    // pageEvent = BlocProvider.of<PagingBloc>(context);
   }
 
   @override
