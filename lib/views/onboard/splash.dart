@@ -31,9 +31,18 @@ class _SplashState extends State<Splash> {
       builder: (context, state) => Scaffold(
         backgroundColor: state.materialColor,
         body: Center(
-          child: GitIcon(
-            size: (width * 0.5).toInt(),
-            color: state.textColor,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              GitIcon(
+                size: (width * 0.5).toInt(),
+                color: state.textColor,
+              ),
+              Text(
+                'Github : fradip12',
+                style: TextStyle(color: Colors.white),
+              )
+            ],
           ),
         ),
       ),

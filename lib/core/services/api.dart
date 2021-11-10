@@ -10,7 +10,7 @@ class Git {
   static Future<LoginResult> login({String user, String pass}) async {
     final response = await http
         .get(Uri.parse(BASE_URL + '/api/method/login?usr=$user&pwd=$pass'));
-    print(response);
+
     LoginResult value = LoginResult.fromJson(json.decode(response.body));
     return value;
   }

@@ -22,7 +22,6 @@ class _WelcomeState extends State<Welcome> {
   TextEditingController pass = TextEditingController();
   final GlobalKey<FormFieldState> passGlob = GlobalKey<FormFieldState>();
 
-  List<String> text = ['Welcome', 'to', 'LookGit'];
   bool end = false;
   bool color = false;
   LoginBloc loginBloc;
@@ -74,11 +73,14 @@ class _WelcomeState extends State<Welcome> {
                       ),
                       Button(
                           title: 'Login',
-                          func: () {
-                            loginBloc.add(InitLoggin());
-                            loginBloc.add(FetchLogin(
-                                password: pass.text, username: user.text));
-                            if (loginState is LoggedIn) {
+                          func: () async {
+                            // loginBloc.add(InitLoggin());
+                            // loginBloc.add(FetchLogin(
+                            //     password: pass.text, username: user.text));
+                            final response = await Git.login(
+                                pass: pass.text, user: user.text);
+                            print(response.runtimeType);
+                            if (response is LoginResult) {
                               Get.toNamed('/lobby');
                             }
                           })
