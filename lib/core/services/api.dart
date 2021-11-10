@@ -18,13 +18,11 @@ class Git {
   static Future<List<ItemResult>> fetchData({String user, String pass}) async {
     final response =
         await http.get(Uri.parse('https://fakestoreapi.com/products'));
-    print(response);
     List<ItemResult> data = [];
     json.decode(response.body).forEach((v) {
       ItemResult _tmp = ItemResult.fromJson(v);
       data.add(_tmp);
     });
-    print(data);
     return data;
   }
 }

@@ -80,7 +80,6 @@ class _WelcomeState extends State<Welcome> {
                                 password: pass.text, username: user.text));
                             if (loginState is LoggedIn) {
                               Get.toNamed('/lobby');
-                              Git.fetchData();
                             }
                           })
                     ],

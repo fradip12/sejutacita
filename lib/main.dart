@@ -1,3 +1,4 @@
+import 'package:citav2/bloc/fetch_item/fetchitem_bloc.dart';
 import 'package:citav2/bloc/login/login_bloc.dart';
 import 'package:citav2/core/shared/app.dart';
 import 'package:citav2/views/lobby/lobby_root.dart';
@@ -39,6 +40,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<LoginBloc>(
           create: (BuildContext context) => LoginBloc(),
+        ),
+        BlocProvider<FetchItemBloc>(
+          create: (BuildContext context) => FetchItemBloc(),
         ),
       ],
       child: GetMaterialApp(
