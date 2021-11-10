@@ -2,7 +2,7 @@ import 'package:citav2/bloc/login/login_bloc.dart';
 import 'package:citav2/core/shared/app.dart';
 import 'package:citav2/views/lobby/lobby_root.dart';
 import 'package:citav2/views/onboard/splash.dart';
-import 'package:citav2/views/onboard/welcome.dart';
+import 'package:citav2/views/onboard/login.dart';
 import 'package:citav2/views/pages/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

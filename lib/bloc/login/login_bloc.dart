@@ -8,17 +8,18 @@ part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginResult user;
-  LoginBloc() : super(LoginInitial());
+  LoginBloc() : super(InitialLoggedIn());
 
   @override
   Stream<LoginState> mapEventToState(
     LoginEvent event,
   ) async* {
+    if (event is InitLoggin) {
+      yield NotLoggedIn();
+    }
     if (event is FetchLogin) {
-      print('login block with ${event.username} and ${event.password}');
       user = await Git.login(pass: event.password, user: event.username);
-      print('bloc event login');
-      print(user);
+
       yield LoggedIn(user: user);
     }
   }

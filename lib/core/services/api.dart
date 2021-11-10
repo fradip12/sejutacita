@@ -10,19 +10,21 @@ class Git {
   static Future<LoginResult> login({String user, String pass}) async {
     final response = await http
         .get(Uri.parse(BASE_URL + '/api/method/login?usr=$user&pwd=$pass'));
-
+    print(response);
     LoginResult value = LoginResult.fromJson(json.decode(response.body));
     return value;
   }
 
-  static Future<ItemResult> fetchData({String user, String pass}) async {
-    final response = await http
-        .get(Uri.parse(BASE_URL + '/api/method/login?usr=$user&pwd=$pass'));
-
-    if (response.statusCode == 200) {
-      ItemResult value = ItemResult.fromJson(json.decode(response.body));
-      return value;
-    }
-    return throw Exception('Unable to get data');
+  static Future<List<ItemResult>> fetchData({String user, String pass}) async {
+    final response =
+        await http.get(Uri.parse('https://fakestoreapi.com/products'));
+    print(response);
+    List<ItemResult> data = [];
+    json.decode(response.body).forEach((v) {
+      ItemResult _tmp = ItemResult.fromJson(v);
+      data.add(_tmp);
+    });
+    print(data);
+    return data;
   }
 }

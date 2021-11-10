@@ -19,11 +19,6 @@ class _SplashState extends State<Splash> {
     super.initState();
 
     new Timer(new Duration(seconds: 3), () {
-      //Go to Onboard if isWelcome
-      // if (!App.data.getBool('isWelcome')) {
-      //   Get.offNamed('/lobby');
-      //   // Get.offNamed('/welcome');
-      // } else
       Get.offNamed('/welcome');
     });
   }
@@ -31,9 +26,7 @@ class _SplashState extends State<Splash> {
   @override
   Widget build(BuildContext context) {
     final width = getWidth(context);
-    if (!App.data.containsKey('isWelcome')) {
-      App.data.setBool('isWelcome', true);
-    }
+
     return BlocBuilder<ThemeBloc, ThemeState>(
       builder: (context, state) => Scaffold(
         backgroundColor: state.materialColor,

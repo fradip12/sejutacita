@@ -31,6 +31,7 @@ class _WelcomeState extends State<Welcome> {
     super.initState();
     App.data.setBool('isWelcome', false);
     loginBloc = BlocProvider.of<LoginBloc>(context);
+    print(loginBloc.state);
   }
 
   @override
@@ -74,12 +75,12 @@ class _WelcomeState extends State<Welcome> {
                       Button(
                           title: 'Login',
                           func: () {
+                            loginBloc.add(InitLoggin());
                             loginBloc.add(FetchLogin(
                                 password: pass.text, username: user.text));
-                            print('login state');
-                            print(loginState);
                             if (loginState is LoggedIn) {
                               Get.toNamed('/lobby');
+                              Git.fetchData();
                             }
                           })
                     ],
