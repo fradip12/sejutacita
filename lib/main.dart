@@ -1,9 +1,3 @@
-import 'package:citav2/bloc/chooser/chooser_bloc.dart';
-import 'package:citav2/bloc/data/issue_data/issue_data_bloc.dart';
-import 'package:citav2/bloc/data/repo_data/repo_data_bloc.dart';
-import 'package:citav2/bloc/data/user_data/data_bloc.dart';
-import 'package:citav2/bloc/paging/paging_bloc.dart';
-import 'package:citav2/bloc/radio/radio_bloc.dart';
 import 'package:citav2/core/shared/app.dart';
 import 'package:citav2/views/lobby/lobby_root.dart';
 import 'package:citav2/views/onboard/splash.dart';
@@ -42,24 +36,6 @@ class MyApp extends StatelessWidget {
               textColor: HydratedBloc.storage.read('textColor') ?? Colors.white,
               themeType: HydratedBloc.storage.read('themeType') ?? 'dark')),
         ),
-        BlocProvider<ChooserBloc>(
-          create: (BuildContext context) => ChooserBloc(),
-        ),
-        BlocProvider<DataBloc>(
-          create: (BuildContext context) => DataBloc(),
-        ),
-        BlocProvider<RadioBloc>(
-          create: (BuildContext context) => RadioBloc(),
-        ),
-        BlocProvider<RepoDataBloc>(
-          create: (BuildContext context) => RepoDataBloc(),
-        ),
-        BlocProvider<IssueDataBloc>(
-          create: (BuildContext context) => IssueDataBloc(),
-        ),
-        BlocProvider<PagingBloc>(
-          create: (BuildContext context) => PagingBloc(),
-        )
       ],
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,

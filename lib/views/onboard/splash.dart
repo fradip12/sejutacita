@@ -20,11 +20,11 @@ class _SplashState extends State<Splash> {
 
     new Timer(new Duration(seconds: 3), () {
       //Go to Onboard if isWelcome
-      if (!App.data.getBool('isWelcome')) {
-        Get.offNamed('/lobby');
-        // Get.offNamed('/welcome');
-      } else
-        Get.offNamed('/welcome');
+      // if (!App.data.getBool('isWelcome')) {
+      //   Get.offNamed('/lobby');
+      //   // Get.offNamed('/welcome');
+      // } else
+      Get.offNamed('/welcome');
     });
   }
 
